@@ -59,43 +59,32 @@ int main(int argc, char* argv[])
     SimpleStruct simple_struct;
 
     TTF::ThreadPool thread_pool(3);
+    TTF::TaskHolder holder;
 
     int i = 2;
 
-    TTF::Task taskA, taskB, taskC, taskD;
-    taskA.set_func(SimpleFunction, 1);
-    taskB.set_func(simple_class, 2, i);
-    taskC.set_func(simple_struct, 3);
-    taskD.set_func(lambda, 4);
+    auto taskA = holder.emplace(SimpleFunction, 1);
+    auto taskB = holder.emplace(simple_class, 2, i);
+    auto taskC = holder.emplace(simple_struct, 3);
+    auto taskD = holder.emplace(lambda, 4);
+    auto taskE = holder.emplace(SimpleFunction, 5);
+    auto taskF = holder.emplace(SimpleFunction, 6);
+    auto taskG = holder.emplace(SimpleFunction, 7);
+
+    TTF::Task::connect(taskB, taskA);
+    TTF::Task::connect(taskC, taskA);
+    TTF::Task::connect(taskD, taskA);
+
+    TTF::Task::connect(taskA, taskE);
+
+    TTF::Task::connect(taskB, taskF);
+    TTF::Task::connect(taskC, taskF);
+
+    TTF::Task::connect(taskE, taskG);
+    TTF::Task::connect(taskF, taskG);
 
 
-    taskA.rely_on(&taskB);
-    taskA.rely_on(&taskC);
-    taskA.rely_on(&taskD);
-
-    TTF::Task taskE, taskF, taskG;
-    taskE.set_func(SimpleFunction, 5);
-    taskE.rely_on(&taskA);
-
-    taskF.set_func(SimpleFunction, 6);
-    taskF.rely_on(&taskB);
-    taskF.rely_on(&taskC);
-
-
-    taskG.set_func(SimpleFunction, 7);
-    taskG.rely_on(&taskE);
-    taskG.rely_on(&taskF);
-
-
-    thread_pool.emplace(&taskA);
-    thread_pool.emplace(&taskB);
-    thread_pool.emplace(&taskC);
-    thread_pool.emplace(&taskD);
-    thread_pool.emplace(&taskE);
-    thread_pool.emplace(&taskF);
-    thread_pool.emplace(&taskG);
-
-    thread_pool.run();
+    thread_pool.run(holder);
 
     thread_pool.wait_to_end();
 

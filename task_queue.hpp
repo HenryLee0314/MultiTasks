@@ -30,13 +30,13 @@ public:
     void emplace(T &t)
     {
         std::unique_lock<std::mutex> lock(_mutex);
-        _queue.emplace(forward<T>(t));
+        _queue.emplace(t);
     }
     bool dequeue(T &t)
     {
         std::unique_lock<std::mutex> lock(_mutex);
         if (_queue.empty()) return false;
-        t = forward<T>(_queue.front());
+        t = _queue.front();
         _queue.pop();
         return true;
     }

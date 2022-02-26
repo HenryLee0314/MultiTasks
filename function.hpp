@@ -1,6 +1,8 @@
 #ifndef FUNCTION_HPP
 #define FUNCTION_HPP
 
+#include "log.h"
+
 namespace TTF {
 
 template< class T >
@@ -60,9 +62,11 @@ private:
 public:
     template < typename T >
     Function(T functor) : base(new Functor< T >(functor)) {
+        // CGRA_LOGD();
     }
 
     Function() : base(nullptr) {
+        // CGRA_LOGD();
     }
 
     Ret operator()() {
@@ -78,6 +82,7 @@ public:
     }
 
     ~Function() {
+        // CGRA_LOGD();
         delete base;
     }
 };
