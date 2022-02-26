@@ -23,7 +23,7 @@ public:
 
     template <typename F, typename... Args>
     void set_func(F &&f, Args &&...args) {
-        _func = [&f{forward<F>(f)}, &...args{forward<Args>(args...)}]() {
+        _func = [&f{forward<F>(f)}, &...args{forward<Args>(args)}]() {
             (f)(args...);
         };
     }

@@ -25,9 +25,9 @@ void SimpleFunction(int x) {
 class SimpleClass
 {
 public:
-    void operator()(int x)
+    void operator()(int x, int y)
     {
-        CGRA_LOGD("%d", x);
+        CGRA_LOGD("%d %d", x, y);
         int sleep = simulate_hard_computation();
         CGRA_LOGD("%d, %d", x, sleep);
     }
@@ -59,9 +59,12 @@ int main(int argc, char* argv[])
     SimpleStruct simple_struct;
 
     TTF::ThreadPool thread_pool(3);
+
+    int i = 2;
+
     TTF::Task taskA, taskB, taskC, taskD;
     taskA.set_func(SimpleFunction, 1);
-    taskB.set_func(simple_class, 2);
+    taskB.set_func(simple_class, 2, i);
     taskC.set_func(simple_struct, 3);
     taskD.set_func(lambda, 4);
 
