@@ -83,7 +83,6 @@ int main(int argc, char* argv[])
     TTF::Task::connect(taskE, taskG);
     TTF::Task::connect(taskF, taskG);
 
-
     thread_pool.run(holder);
 
     thread_pool.wait_to_end();
